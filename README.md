@@ -1,75 +1,333 @@
-<header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodePen Wall</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<!--
-  <<< Author notes: Course header >>>
-  Include a 1280×640 image, course title in sentence case, and a concise description in emphasis.
-  In your repository settings: enable template repository, add your 1280×640 social image, auto delete head branches.
-  Add your open source license, GitHub uses MIT license.
--->
+    :root {
+      --bg-color-light: #f0f2f5;
+      --card-bg-light: rgba(255,255,255,0.6);
+      --text-color-light: #333;
+      --accent-color-light: #0ebeff;
+      --input-bg-light: #fff;
+      --button-bg-light: #0ebeff;
+      --button-text-light: #fff;
 
-# GitHub Pages
+      --bg-color-dark: #1a1a2e;
+      --card-bg-dark: rgba(40,42,54,0.65);
+      --text-color-dark: #f0f2f5;
+      --accent-color-dark: #0ebeff;
+      --input-bg-dark: #333;
+      --button-bg-dark: #162447;
+      --button-text-dark: #e4f9f5;
 
-_Create a site or blog from your GitHub repositories with GitHub Pages._
+      --blur: blur(8px);
+      --transition: 0.3s;
 
-</header>
+      --bg-color: var(--bg-color-light);
+      --card-bg: var(--card-bg-light);
+      --text-color: var(--text-color-light);
+      --accent-color: var(--accent-color-light);
+      --input-bg: var(--input-bg-light);
+      --button-bg: var(--button-bg-light);
+      --button-text: var(--button-text-light);
+    }
 
-<!--
-  <<< Author notes: Course start >>>
-  Include start button, a note about Actions minutes,
-  and tell the learner why they should take the course.
--->
+    body.dark-mode {
+      --bg-color: var(--bg-color-dark);
+      --card-bg: var(--card-bg-dark);
+      --text-color: var(--text-color-dark);
+      --accent-color: var(--accent-color-dark);
+      --input-bg: var(--input-bg-dark);
+      --button-bg: var(--button-bg-dark);
+      --button-text: var(--button-text-dark);
+    }
 
-## Welcome
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color var(--transition);
+    }
 
-With GitHub Pages, you can host project blogs, documentation, resumes, portfolios, or any other static content you'd like. Your GitHub repository can easily become its own website. In this course, we'll show you how to set up your own site or blog using GitHub Pages.
+    .app-header {
+      background: var(--card-bg);
+      backdrop-filter: var(--blur);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
 
-- **Who is this for**: Beginners, students, project maintainers, small businesses.
-- **What you'll learn**: How to build a GitHub Pages site.
-- **What you'll build**: We'll build a simple GitHub Pages site with a blog. We'll use [Jekyll](https://jekyllrb.com), a static site generator.
-- **Prerequisites**: If you need to learn about branches, commits, and pull requests, take [Introduction to GitHub](https://github.com/skills/introduction-to-github) first.
-- **How long**: This course takes less than one hour to complete.
+    .form-container {
+      display: flex;
+      flex: 1;
+      gap: 10px;
+      max-width: 700px;
+    }
 
-In this course, you will:
+    input[type="url"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      transition: border var(--transition);
+    }
 
-1. Enable GitHub Pages
-2. Configure your site
-3. Customize your home page
-4. Create a blog post
-5. Merge your pull request
+    input[type="url"]:focus {
+      border-color: var(--accent-color);
+      outline: none;
+    }
 
-### How to start this course
+    button {
+      background: var(--button-bg);
+      color: var(--button-text);
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
 
-<!-- For start course, run in JavaScript:
-'https://github.com/new?' + new URLSearchParams({
-  template_owner: 'skills',
-  template_name: 'github-pages',
-  owner: '@me',
-  name: 'skills-github-pages',
-  description: 'My clone repository',
-  visibility: 'public',
-}).toString()
--->
+    button:hover {
+      opacity: 0.9;
+    }
 
-[![start-course](https://user-images.githubusercontent.com/1221423/235727646-4a590299-ffe5-480d-8cd5-8194ea184546.svg)](https://github.com/new?template_owner=skills&template_name=github-pages&owner=%40me&name=skills-github-pages&description=My+clone+repository&visibility=public)
+    #pen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      flex: 1;
+    }
 
-1. Right-click **Start course** and open the link in a new tab.
-2. In the new tab, most of the prompts will automatically fill in for you.
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will [use Actions minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
-3. After your new repository is created, wait about 20 seconds, then refresh the page. Follow the step-by-step instructions in the new repository's README.
+    .pen-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
 
-<footer>
+    .pen-card iframe {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border: none;
+    }
 
-<!--
-  <<< Author notes: Footer >>>
-  Add a link to get support, GitHub status page, code of conduct, license link.
--->
+    .pen-card .action-bar {
+      text-align: center;
+      padding: 10px;
+      background: rgba(0,0,0,0.05);
+    }
 
----
+    .pen-card .action-bar a {
+      text-decoration: none;
+      background: var(--button-bg);
+      color: var(--button-text);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      display: inline-block;
+      transition: background 0.3s;
+    }
 
-Get help: [Post in our discussion board](https://github.com/orgs/skills/discussions/categories/github-pages) &bull; [Review the GitHub status page](https://www.githubstatus.com/)
+    .pen-card .action-bar a:hover {
+      opacity: 0.85;
+    }
 
-&copy; 2023 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
 
-</footer>
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 5px 10px;
+      display: none;
+    }
+
+    .theme-toggle {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .app-footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9rem;
+      color: var(--text-color);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <form id="add-pen-form" class="form-container">
+      <input type="url" id="pen-url-input" placeholder="Paste CodePen URL..." required />
+      <button type="submit">Add Pen</button>
+    </form>
+    <div class="controls">
+      <button id="clear-all-btn">Clear All</button>
+      <span id="theme-toggle" class="theme-toggle">☀️</span>
+    </div>
+  </header>
+
+  <p id="error-feedback" class="error-message"></p>
+
+  <main id="pen-grid"></main>
+
+  <footer class="app-footer">
+    CodePen Wall | Built with HTML5, CSS3, ES6 | AI Powered
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('add-pen-form');
+      const urlInput = document.getElementById('pen-url-input');
+      const penGrid = document.getElementById('pen-grid');
+      const clearAllBtn = document.getElementById('clear-all-btn');
+      const themeToggle = document.getElementById('theme-toggle');
+      const errorFeedback = document.getElementById('error-feedback');
+
+      const STORAGE_KEY_PENS = 'codepenWallPens';
+      const STORAGE_KEY_THEME = 'codepenWallTheme';
+
+      const showError = (msg) => {
+        errorFeedback.textContent = msg;
+        errorFeedback.style.display = 'block';
+      };
+
+      const clearError = () => {
+        errorFeedback.textContent = '';
+        errorFeedback.style.display = 'none';
+      };
+
+      const parseCodePenUrl = (url) => {
+        try {
+          const parsed = new URL(url);
+          if (parsed.hostname !== 'codepen.io') return null;
+
+          const parts = parsed.pathname.split('/').filter(Boolean);
+          if (parts.length >= 3 && ['pen', 'details', 'full', 'pres'].includes(parts[1])) {
+            return { user: parts[0], slug: parts[2] };
+          }
+        } catch {
+          return null;
+        }
+        return null;
+      };
+
+      const createPenEmbed = (url, user, slug) => {
+        const penCard = document.createElement('div');
+        penCard.className = 'pen-card';
+        penCard.dataset.url = url;
+
+        const embedUrl = `https://codepen.io/${user}/embed/${slug}?default-tab=result&theme-id=${document.body.classList.contains('dark-mode') ? 'dark' : 'light'}`;
+        const viewUrl = `https://codepen.io/${user}/pen/${slug}`;
+
+        const iframe = document.createElement('iframe');
+        iframe.src = embedUrl;
+        iframe.title = `CodePen Embed: ${slug}`;
+        iframe.loading = 'lazy';
+        iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-presentation';
+
+        const actionBar = document.createElement('div');
+        actionBar.className = 'action-bar';
+        actionBar.innerHTML = `<a href="${viewUrl}" target="_blank">View in CodePen</a>`;
+
+        penCard.appendChild(iframe);
+        penCard.appendChild(actionBar);
+        return penCard;
+      };
+
+      const addPen = (url) => {
+        clearError();
+        const parsed = parseCodePenUrl(url);
+        if (!parsed) {
+          showError('Invalid CodePen URL format.');
+          return false;
+        }
+
+        if ([...penGrid.children].some(p => p.dataset.url === url)) {
+          showError('This pen is already added.');
+          return false;
+        }
+
+        const pen = createPenEmbed(url, parsed.user, parsed.slug);
+        penGrid.appendChild(pen);
+        saveUrl(url);
+        return true;
+      };
+
+      const saveUrl = (url) => {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY_PENS)) || [];
+        if (!saved.includes(url)) {
+          saved.push(url);
+          localStorage.setItem(STORAGE_KEY_PENS, JSON.stringify(saved));
+        }
+      };
+
+      const loadPens = () => {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY_PENS)) || [];
+        saved.forEach(addPen);
+      };
+
+      const clearPens = () => {
+        localStorage.removeItem(STORAGE_KEY_PENS);
+        penGrid.innerHTML = '';
+        clearError();
+      };
+
+      const applyTheme = (theme) => {
+        document.body.classList.toggle('dark-mode', theme === 'dark');
+        themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+        localStorage.setItem(STORAGE_KEY_THEME, theme);
+      };
+
+      const loadTheme = () => {
+        const theme = localStorage.getItem(STORAGE_KEY_THEME) || 'light';
+        applyTheme(theme);
+      };
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = urlInput.value.trim();
+        if (url && addPen(url)) {
+          urlInput.value = '';
+        }
+      });
+
+      clearAllBtn.addEventListener('click', clearPens);
+      themeToggle.addEventListener('click', () => {
+        const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+        applyTheme(newTheme);
+      });
+      urlInput.addEventListener('input', clearError);
+
+      loadTheme();
+      loadPens();
+    });
+  </script>
+
+</body>
+</html>
