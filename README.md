@@ -52,3 +52,12 @@ Get help: [Post in our discussion board](https://github.com/orgs/skills/discussi
 &copy; 2023 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
 
 </footer>
+
+<!-- SHROOMTOP420-MONETIZATION-BLOCK-START -->
+## 🚀 Support & Commercial Use
+
+- **Buy full-access or commercial license:** [Pay with Stripe](https://buy.stripe.com/aFa6oHeG74DQ8ZB3LubQY01)
+- **Donate or support ongoing dev:** [Buy Me A Coffee](https://buymeacoffee.com/shroomtop420)
+
+> *Commercial use requires license. See LICENSE for terms.*
+<!-- SHROOMTOP420-MONETIZATION-BLOCK-END -->
